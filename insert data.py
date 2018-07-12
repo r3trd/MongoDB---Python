@@ -53,6 +53,14 @@ for key,value in dic.items():
 field.remove('_id')
 #print(field)
 #Enter data into database :
+'''
+def search_dict(value, dic) :
+    for key, val in dic.items :
+        if val == value :
+            return key
+        elif isinstance(val, dict) :
+            return search_dict(value,val)
+'''
 row ={}
 choice = 'y'
 while( choice == 'Y' or choice == 'y'):
