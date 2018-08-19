@@ -45,31 +45,41 @@ else:
     exit(0)
 #print(collection)
 dic=collection.find_one()
-#pprint.pprint(raw)
+#pprint.pprint(dic)
 
-field =[]
-for key,value in dic.items():
-    field.append(key)
-field.remove('_id')
-#print(field)
-#Enter data into database :
-'''
-def search_dict(value, dic) :
-    for key, val in dic.items :
-        if val == value :
-            return key
-        elif isinstance(val, dict) :
-            search_dict(value,val)
-'''
-row ={}
+def recsrc(obj):
+    field = []
+    #print(obj.items())
+    for key,value in obj.items():
+        if isinstance(value,dict):
+             temp={}
+             temp[key]=recsrc(value)
+             field.append(temp)
+        else :
+            field.append(key)
+    return field
+res = recsrc(dic)
+print(res)
+
 choice = 'y'
-while( choice == 'Y' or choice == 'y'):
 
-    for key in field :
-        print("Enter data for %s : " %key)
-        value = input()
-        row[key]=value
-    collection.insert_one(row)
+def inpt(obj) :
+    row = {}
+    for key in obj :
+        if isinstance(key,dict) :
+            for kkey, value in key.items():
+                row[kkey] = inpt(value)     
+        else :
+            print("Enter data for %s : " %key)
+            row[key] = input()
+    return row
+#print(inpt(res))
+
+
+while( choice == 'Y' or choice == 'y'):
+    collection.insert_one(inpt(res))
     print("Do you want to insert more documents ? (y=yes/ n=no) ")
     choice = input()
+
 client.close()
+
